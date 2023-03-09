@@ -37,33 +37,16 @@ Limit 3;
 
 --3. Find the top 5 items with the highest average sales per day.
 
+with t1 as
+(
 SELECT Product_Name, SUM(Sales) / COUNT(DISTINCT Order_Date) AS Avg_Sales_Per_Day
 FROM superstore
 GROUP BY Product_Name
+)
+select * from t1
 ORDER BY Avg_Sales_Per_Day DESC
 LIMIT 5;
 
--- or the other code is given below
-with t1 as
-	(
-	 select product_name, sales, 
-	 order_date, row_number() over(partition by extract(day from order_date), product_name) as r
-	 from superstore
-	)
-,
-t2 as 
-	(
-	 select product_name, max(r) as no_of_days_sold
-	 from t1
-	 group by product_name
-	)
-select t1.product_name, (avg(t1.sales)/ t2.no_of_days_sold) as average_sales_per_day
-from t1 
-inner join t2
-on t1.product_name = t2.product_name
-group by t1.product_name, t2.no_of_days_sold
-order by (avg(t1.sales)/ t2.no_of_days_sold) desc
-Limit 5;
 
 --4. Write a query to find the average order value for each customer, and rank the customers by their average order value.
 
