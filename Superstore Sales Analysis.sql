@@ -50,8 +50,8 @@ LIMIT 5;
 
 --4. Write a query to find the average order value for each customer, and rank the customers by their average order value.
 
-select customer_name, customer_id,  avg(sales) as avg_order_value from superstore
-group by customer_id, customer_name
+select customer_name, customer_id,  avg(sales) over(partition by customer_name) as avg_order_value from superstore
+group by customer_id, customer_name, sales
 order by avg(sales) desc;
 
 --5.Give the name of customers who ordered highest and lowest orders from each city.
