@@ -138,10 +138,16 @@ t3 as
 (
 select t2.*, t0.*
 from t2 cross join t0
-)
+),
+t4 as
+(
 select *, 100.0*no_of_orders_in_first_class_per_segment/total_segment as percent_order_shipped_via_first_class
 from t3
-order by 100.0*no_of_orders_in_first_class_per_segment/total_segment desc;
+)
+select segments
+from t4
+order by percent_order_shipped_via_first_class desc
+limit 1;
 
 --
 --SELECT segment, COUNT() FILTER (WHERE ship_mode = 'First Class') * 100.0 / COUNT() AS first_class_percentage
